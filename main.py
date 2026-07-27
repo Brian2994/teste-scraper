@@ -2,6 +2,12 @@ import os
 from dotenv import load_dotenv
 from playwright.sync_api import sync_playwright
 
+def obter_texto(locator):
+    try:
+        return locator.inner_text()
+    except:
+        return None
+
 # Carrega as variáveis do arquivo .env
 load_dotenv()
 
@@ -30,33 +36,58 @@ with sync_playwright() as p:
 
     print(f"Foram encontrados {cards.count()} anúncios.")
 
+    veiculos = []
+
     # extrair tudo do primeiro carro
-    primeiro_carro = cards.nth(0)
-    titulo = primeiro_carro.locator(".info__title").inner_text()
-    versao = primeiro_carro.locator(".info__subtitle").inner_text()
-    dados = primeiro_carro.locator(".add__info").inner_text()
+    for i in range(cards.count()):
+        carro = cards.nth(i)
+        print(f"\nProcessando veículo {i+1}/{cards.count()}")
 
-    ano, quilometragem, cidade = [
-        item.strip()
-        for item in dados.split("•")
-    ]
+        titulo = obter_texto(carro.locator(".info__title"))
+        versao = obter_texto(carro.locator(".info__subtitle"))
+        dados = obter_texto(carro.locator(".add__info"))
 
-    preco_antigo = primeiro_carro.locator(".price-24").inner_text()
-    preco_atual = primeiro_carro.locator(".price-30").inner_text()
-    imagem = primeiro_carro.locator(".vehicle-img").get_attribute("src")
-    link = primeiro_carro.locator("a").get_attribute("href")
-    url_completo = BASE_URL + link
+        ano, quilometragem, cidade = [
+            item.strip()
+            for item in dados.split("•")
+        ]
 
-    print("Título:", titulo)
-    print("Versão:", versao)
-    print("Dados:", dados)
-    print("Ano:", ano)
-    print("KM:", quilometragem)
-    print("Cidade:", cidade)
-    print("Preço antigo:", preco_antigo)
-    print("Preço atual:", preco_atual)
-    print("Imagem:", imagem)
-    print("Link:", url_completo)
+        preco_antigo = obter_texto(carro.locator(".price-24"))
+        preco_atual = obter_texto(carro.locator(".price-30"))
+        imagem = carro.locator(".vehicle-img").get_attribute("src")
+        link = carro.locator("a").get_attribute("href")
+        url_completo = BASE_URL + link
+
+        print("Título:", titulo)
+        print("Versão:", versao)
+        print("Dados:", dados)
+        print("Ano:", ano)
+        print("KM:", quilometragem)
+        print("Cidade:", cidade)
+        print("Preço antigo:", preco_antigo)
+        print("Preço atual:", preco_atual)
+        print("Imagem:", imagem)
+        print("Link:", url_completo)
+
+        veiculo = {
+        "titulo": titulo,
+        "versao": versao,
+        "ano": ano,
+        "quilometragem": quilometragem,
+        "cidade": cidade,
+        "preco_antigo": preco_antigo,
+        "preco_atual": preco_atual,
+        "imagem": imagem,
+        "url": url_completo
+        }
+
+        veiculos.append(veiculo)
+        print(f"✓ {titulo}")
+
+    print("\n=================================")
+    print(f"Total coletado: {len(veiculos)}")
+    print("\nPrimeiro veículo:")
+    print(veiculos[0])
 
     input("\nPressione ENTER para fechar...")
 
