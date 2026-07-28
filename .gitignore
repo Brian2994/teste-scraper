@@ -1,0 +1,11 @@
+# Ambientes virtuais
+.venv/
+
+# Variaveis de ambiente
+.env
+
+.gitignore/
+
+__pycache__/
+
+data/
