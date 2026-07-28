@@ -1,0 +1,10 @@
+# Ambientes virtuais
+.venv/
+
+# Variaveis de ambiente
+.env
+
+__pycache__/
+
+# JSON
+*.json

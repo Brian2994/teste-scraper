@@ -3,8 +3,8 @@ from src.bronze.bronze import salvar_bronze
 
 
 def main():
-    dados = executar_extracao()
-    salvar_bronze(dados)
+    dados, data_coleta = executar_extracao()
+    salvar_bronze(dados, data_coleta)
 
 
 if __name__ == "__main__":

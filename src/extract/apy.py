@@ -1,8 +1,7 @@
 import os
 from dotenv import load_dotenv
+from datetime import datetime
 import requests
-
-from src.bronze.bronze import salvar_bronze
 
 def executar_extracao():
     # Carrega as variáveis do arquivo .env
@@ -14,6 +13,8 @@ def executar_extracao():
     PAGE_SIZE = 1000    # Quantidade solicitada por lote
     from_ = 0           # Começa pelo primeiro índice
     veiculos = []       # Lista (Dados temporários)
+
+    data_coleta = datetime.now()
 
     print("Iniciando coleta...\n")
 
@@ -47,7 +48,14 @@ def executar_extracao():
             break
 
         # Armazena todos do dados encontrados na lista 'veiculos'
-        veiculos.extend(dados)
+        veiculos.extend([
+            {
+                **veiculo,
+                "data_coleta": data_coleta.strftime("%Y-%m-%d %H:%M:%S"),
+                "fonte": "Seminovos Movida API"
+            }
+            for veiculo in dados
+        ])
 
         print(f"Página {pagina} -> {len(dados)} veículos")
         print(f"Total coletado: {len(veiculos)}\n")
@@ -58,4 +66,4 @@ def executar_extracao():
 
     print(f"\nColeta finalizada! Total de veículos: {len(veiculos)}")
 
-    return veiculos
+    return veiculos, data_coleta

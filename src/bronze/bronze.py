@@ -1,17 +1,15 @@
-import json
 from pathlib import Path
+import json
 
-def salvar_bronze(dados):
+def salvar_bronze(dados, data_coleta):
     pasta = Path("data/bronze")
     pasta.mkdir(parents=True, exist_ok=True)
 
-    arquivo = pasta / "veiculos.json"
+    timestamp = data_coleta.strftime("%Y%m%d_%H%M%S")
 
-    with open(
-        arquivo,
-        "w",
-        encoding="utf-8"
-    ) as arquivo_json:
+    arquivo = pasta / f"veiculos_{timestamp}.json"
+
+    with open(arquivo, "w", encoding="utf-8") as arquivo_json:        
         json.dump(
             dados,
             arquivo_json,
