@@ -6,5 +6,16 @@
 
 __pycache__/
 
-# JSON
-*.json
+# Arquivos JSON da extração
+veiculos_*.json
+
+# Arquivos PARQUET da camada silver e gold
+veiculos_*.parquet
+dim_*.parquet
+fato_*.parquet
+kpi_*.parquet
+
+# Credencial de Google Cloud
+credentials.json
+
+teste_*.pdf
