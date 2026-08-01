@@ -1,5 +1,6 @@
 from pathlib import Path
 from datetime import datetime
+import pandas as pd
 import json
 
 # Constantes
@@ -50,7 +51,7 @@ def ler_bronze():
 
     arquivo = arquivos[-1]
 
-    print(f"Lendo: {arquivo.name}")
+    print(f"\nLendo: {arquivo.name}")
 
     with open(arquivo, encoding="utf-8") as arquivo_json:
         dados = json.load(arquivo_json)
@@ -270,3 +271,22 @@ def transformar_silver(dados):
         dados_transformados.append(novo)
 
     return dados_transformados
+
+
+def salvar_silver(dados, data_coleta):
+    pasta = Path("data/silver")
+    pasta.mkdir(parents=True, exist_ok=True)
+
+    timestamp = data_coleta.strftime("%Y%m%d_%H%M%S")
+
+    arquivo = pasta / f"veiculos_{timestamp}.parquet"
+
+    df = pd.DataFrame(dados)
+
+    df.to_parquet(
+        arquivo,
+        index=False,
+    )
+
+    print(f"\nArquivo salvo em: {arquivo}")
+    print(f"Total de registros: {len(dados)}")
