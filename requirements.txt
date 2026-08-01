@@ -1,2 +1,9 @@
 python-dotenv
 requests
+
+sqlalchemy
+psycopg2-binary
+
+pyarrow
+google-cloud-bigquery
+pandas-gbq
