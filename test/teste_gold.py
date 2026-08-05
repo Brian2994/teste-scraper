@@ -1,3 +1,4 @@
+from sqlalchemy import create_engine
 from src.silver.silver import ler_bronze, transformar_silver
 from src.gold.gold import criar_dataframe, resumo_geral, tabela_marcas, tabela_regioes, tabela_estados, tabela_categorias, tabela_faixa_preco, tabela_modelos, tabela_combustivel, tabela_transmissao, tabela_descontos, tabela_categoria_km, tabela_ano_modelo, tabela_lojas, tabela_cor, tabela_marca_categoria, salvar_tabelas_gold
 
@@ -8,6 +9,9 @@ dados_bronze = ler_bronze()
 dados_silver = transformar_silver(dados_bronze)
 
 df = criar_dataframe(dados_silver)
+
+# Cria um banco de dados temporário fictício apenas para o teste passar
+db_engine = create_engine("sqlite:///:memory:")
 
 print("-" * 80)
 print("DATAFRAME GOLD")
@@ -248,82 +252,98 @@ print("=" * 80)
 salvar_tabelas_gold(
     df,
     "fato_veiculos",
+    engine=db_engine
 )
 
 salvar_tabelas_gold(
     df_resumo,
     "kpi_resumo_geral",
+    engine=db_engine
 )
 
 # Tabelas analíticas
 salvar_tabelas_gold(
     df_marcas,
     "dim_marcas",
+    engine=db_engine
 )
 
 salvar_tabelas_gold(
     df_regioes,
     "dim_regioes",
+    engine=db_engine
 )
 
 salvar_tabelas_gold(
     df_estados,
     "dim_estados",
+    engine=db_engine
 )
 
 salvar_tabelas_gold(
     df_categorias,
     "dim_categorias",
+    engine=db_engine
 )
 
 salvar_tabelas_gold(
     df_faixa_preco,
     "dim_faixa_preco",
+    engine=db_engine
 )
 
 salvar_tabelas_gold(
     df_modelos,
     "dim_modelos",
+    engine=db_engine
 )
 
 salvar_tabelas_gold(
     df_combustivel,
     "dim_combustivel",
+    engine=db_engine
 )
 
 salvar_tabelas_gold(
     df_transmissao,
     "dim_transmissao",
+    engine=db_engine
 )
 
 salvar_tabelas_gold(
     df_descontos,
     "dim_faixa_desconto",
+    engine=db_engine
 )
 
 salvar_tabelas_gold(
     df_categoria_km,
     "dim_categoria_km",
+    engine=db_engine
 )
 
 salvar_tabelas_gold(
     df_ano_modelo,
     "dim_ano_modelo",
+    engine=db_engine
 )
 
 salvar_tabelas_gold(
     df_lojas,
     "dim_lojas",
+    engine=db_engine
 )
 
 salvar_tabelas_gold(
     df_cor,
     "dim_cor",
+    engine=db_engine
 )
 
 salvar_tabelas_gold(
     df_marca_categoria,
     "dim_marca_categoria",
+    engine=db_engine
 )
 
 print("\nPipeline Gold finalizada com sucesso!")

@@ -19,3 +19,5 @@ kpi_*.parquet
 credentials.json
 
 teste_*.pdf
+
+__init__.py
