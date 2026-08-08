@@ -1,4 +1,5 @@
 import os
+import time
 from dotenv import load_dotenv
 from sqlalchemy import create_engine
 from src.extract.apy import executar_extracao
@@ -49,16 +50,25 @@ def main():
 
     try:
 
+        inicio_pipeline = time.perf_counter()
+
         logger.info("Iniciando pipeline")
 
         logger.info("Iniciando etapa EXTRACT")
+        inicio_extract = time.perf_counter()
 
         # EXTRACT
         dados, data_coleta = executar_extracao()
 
-        logger.info(f"Extração concluída. Registros coletados: {len(dados)}")
+        tempo_extract = time.perf_counter() - inicio_extract
+        logger.info(
+            f"Extração concluída. "
+            f"Registros coletados: {len(dados)} | "
+            f"Tempo: {tempo_extract:.2f} segundos"
+        )
 
         logger.info("Iniciando etapa BRONZE")
+        inicio_bronze = time.perf_counter()
 
         # BRONZE
         salvar_bronze(
@@ -66,9 +76,15 @@ def main():
             data_coleta
         )
 
-        logger.info("Camada BRONZE salva com sucesso")
+        tempo_bronze = time.perf_counter() - inicio_bronze
+
+        logger.info(
+            f"Camada BRONZE salva com sucesso. "
+            f"Tempo: {tempo_bronze:.2f} segundos"
+        )
 
         logger.info("Iniciando etapa SILVER")
+        inicio_silver = time.perf_counter()
 
         # SILVER
         dados_silver = transformar_silver(dados)
@@ -84,9 +100,16 @@ def main():
             data_coleta
         )
 
-        logger.info("Camada SILVER salva com sucesso")
+        tempo_silver = time.perf_counter() - inicio_silver
+
+        logger.info(
+            f"Camada SILVER salva com sucesso. "
+            f"Registros: {len(dados_silver)} | "
+            f"Tempo: {tempo_silver:.2f} segundos"
+        )
 
         logger.info("Iniciando etapa GOLD")
+        inicio_gold = time.perf_counter()
 
         # GOLD
         df = criar_dataframe(dados_silver)
@@ -339,11 +362,21 @@ def main():
 
         logger.info("dim_marca_categoria carregada com sucesso")
 
-        logger.info("Todas as tabelas GOLD processadas com sucesso")
+        tempo_gold = time.perf_counter() - inicio_gold
+
+        logger.info(
+            f"Todas as tabelas GOLD processadas com sucesso. "
+            f"Tempo: {tempo_gold:.2f} segundos"
+        )
+
+        fim_pipeline = time.perf_counter()
+
+        tempo_total = fim_pipeline - inicio_pipeline
 
         logger.info(
             "Pipeline finalizada com sucesso. "
-            "Dados locais, PostgreSQL e BigQuery atualizados."
+            "Dados locais, PostgreSQL e BigQuery atualizados. "
+            f"Tempo total: {tempo_total:.2f} segundos"
         )
 
     except Exception:
