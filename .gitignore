@@ -16,8 +16,10 @@ fato_*.parquet
 kpi_*.parquet
 
 # Credencial de Google Cloud
-credentials.json
+credentialsmovida.json
 
 teste_*.pdf
 
 __init__.py
+
+logs/
